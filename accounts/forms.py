@@ -3,7 +3,7 @@ from .models import User
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget= forms.PasswordInput(attrs={
-        'placeholder':'password'
+        'placeholder':'Qwerty@123'
     }))
     confirm_password = forms.CharField(widget= forms.PasswordInput(attrs={
         'placeholder':'Confirm password'
@@ -12,6 +12,11 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name' , 'last_name' , 'username' , 'email' , 'phone_number' , 'password']
+    def __init__(self , *args , **kwargs):
+        super(UserForm , self).__init__(*args ,**kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['style'] = 'width:90%'
+            self.fields[field].widget.attrs['class'] = 'form-control fs-6'
      
     def clean(self):
         cleaned_data = super(UserForm , self).clean()

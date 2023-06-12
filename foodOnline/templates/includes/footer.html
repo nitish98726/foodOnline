@@ -1,5 +1,5 @@
 {% load static %}
-<footer id="footer" class="footer-style-2">
+<footer id="footer" class="footer-style-2 " style="margin-top: 300px;">
     <div class="footer-widget">
         <div class="container">
             <div class="row">
@@ -46,12 +46,16 @@
 </div>
 <script src="{% static 'js/scripts.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
-</body>
-<script>
-    $(document).ready(function(){
-        $('#user_registeration_form').mouseenter(function(){
-            $('#messages_django').hide(2000);
+
+    <script>
+        $(document).ready(function(){
+            $('#user_registeration_form').mouseenter(function(){
+                $('#messages_django').hide(2000);
+            })
+            $('.dashboard_section').mouseenter(function(){
+                $('#messages_django').hide(2000);
+            })
         })
-    })
-</script>
+    </script>
+</body>
 </html>
