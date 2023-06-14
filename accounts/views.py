@@ -8,6 +8,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required , user_passes_test
 from .utils import detectUser , send_verification_mail , user_activation , send_password_reset_mail
 from django.core.exceptions import PermissionDenied
+from vendor.models import Vendor
 # Create your views here.
 
 def check_role_vendor(user):
@@ -137,6 +138,7 @@ def custDashboard(request):
 @login_required(login_url='/accounts/login')
 @user_passes_test(check_role_vendor)
 def vendorDashboard(request):
+    
     return render(request , 'accounts/vendorDashboard.html')
 
 def activate(request ,uidb64 ,token):
@@ -175,8 +177,17 @@ def reset_password_validate(request , uidb64 , token):
     except:
         messages.error(request , "Invalid Link")
         return redirect("myAccount")
+
+def check_genuine_resetPassword(request):
+    try:
+        if request.session.get('uid') is not None:
+            pk = request.session.get('uid')  
+            return True
+    except:    
+        
+            return PermissionDenied
     
-    
+@user_passes_test(check_genuine_resetPassword)    
 def reset_password(request):
     if request.method == "POST":
         password = request.POST['new_password']

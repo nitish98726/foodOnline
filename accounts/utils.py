@@ -52,3 +52,11 @@ def send_password_reset_mail(request ,  user):
     to_email = user.email
     send_email = EmailMessage(main_subject , message , to=[to_email])
     send_email.send()
+
+def send_notification(main_subject ,mail_template,context):
+    
+    
+    message = render_to_string(mail_template,context)
+    to_email = context['user'].email
+    send_email = EmailMessage(main_subject , message , to=[to_email])
+    send_email.send()

@@ -1,0 +1,8 @@
+{% autoescape off %}
+Hii {{user.first_name}}
+{% if is_approved %}
+Congratulations Your Restaurant has been approved by our admin team --foodOnline
+{% else %}
+Sorry your Restaurant does not meet our eligible criterta.To know more details contact support at support@foodOnline.com
+{% endif %}
+{% endautoescape%}
