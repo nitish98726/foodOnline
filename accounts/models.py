@@ -80,8 +80,8 @@ class User(AbstractBaseUser):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User , on_delete=models.CASCADE)
-    address_line1 = models.CharField(blank=True , max_length=200)
-    address_line2 = models.CharField(blank=True , max_length=100)
+    address = models.CharField(blank=True , max_length=250)
+   
     profile_picture = models.ImageField(blank=True,upload_to='user/profile_pictures')
     cover_picture = models.ImageField(blank=True,upload_to='user/cover_pictures')
     city = models.CharField(blank=True , max_length=20)
@@ -95,6 +95,5 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.first_name
     
-    def full_address(self):
-        return f'{self.address_line1} {self.address_line2}'
+    
 

@@ -1,5 +1,6 @@
 from django import forms
-from .models import User
+from .models import User , UserProfile
+from .validators import allow_only_images
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget= forms.PasswordInput(attrs={
@@ -25,3 +26,15 @@ class UserForm(forms.ModelForm):
 
         if password != confirm_password:
             raise forms.ValidationError("Passwords do not match")
+        
+class UserProfileForm(forms.ModelForm):
+    address = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Start Typing...' , 'required':'required'}))
+    profile_picture = forms.FileField(validators=[allow_only_images])
+    cover_picture = forms.FileField(validators=[allow_only_images])
+    class Meta:
+        model = UserProfile
+        fields = ['profile_picture' , 'cover_picture' , 'address',  'state' , 'city' ,'latitude' , 'longitude' , ]
+    def __init__(self , *args , **kwargs):
+        super(UserProfileForm ,self).__init__(*args , **kwargs)
+        self.fields['latitude'].disabled = True
+        self.fields['longitude'].disabled = True
