@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
 {% include "includes/cover.html" %}
+<!-- This is vendor_profile.html -->
+<section class = 'dashboard_section'>
 <div class="container">
+    
     <div class="row">
         {% include "includes/vendor_sidebar.html" %}
 
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+            
             <div class="user-dashboard loader-holder">
                 <div class="user-holder">
+                    {% include 'includes/alerts.html' %}
                     <h4 class="pb-2">Manage Your Restaurant</h4>
                     <form action="{% url 'vendor_profile' %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -140,5 +145,6 @@
         </div>
     </div>
 </div>
+</section>
 
 {% endblock %}

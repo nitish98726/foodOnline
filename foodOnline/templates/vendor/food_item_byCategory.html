@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include "includes/cover.html" %}
+<!-- This is vendor_profile.html -->
+<section class = 'dashboard_section'>
+<div class="container">
+    
+    <div class="row">
+        {% include "includes/vendor_sidebar.html" %}
+
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+            
+            <div class="user-dashboard loader-holder">
+                <div class="user-holder">
+                    {% include 'includes/alerts.html' %}
+                    <h4>Build Your Food Menu</h4>
+                    <hr>
+                    
+                    <h6>Category : <span class="text-success">{{category}}</span></h6>
+                    {% if fooditems %}
+                    <div class="text-end">
+                        <button class="btn btn-secondary" onclick="history.back()">Back</button>
+                        <a href="{% url 'add_foodItem' %}" class="btn btn-success  m-1"><i class="fa-solid fa-plus"></i> Add Food</a>
+                        <a href="{% url 'add_category' %}" class="btn btn-info m-1"><i class="fa-solid fa-plus"></i> Add Categories</a>
+                    </div>
+                   
+                    <table class="table table-hover mt-2">
+                        
+                        <tbody >
+                          {% for food in fooditems %}
+                          <tr>
+                            <td  class="border border-0" >{{forloop.counter}}</td>
+                            <td class="border border-0 text-start p-0 "><img src="{{food.image.url}}" alt="Food Image" width="80px"></td>
+                            <td class="border border-0 text-start">
+                                <a class="text-decoration-none  text-black" href="#">
+                                    <p class="mb-0">{{food}}</p>
+                                    <small class="text-muted text-wrap d-block lh-1">{{food.description}}</small>
+                                </a>
+                            </td>
+                            <td class="border border-0"><a href="" class=" btn btn-success text-decoration-none">Edit</a>|<a href="" class="btn btn-danger text-decoration-none">Delete</a></td>
+                            
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <br>
+                    <br>
+                    <h5 class="text-center">No Food Items Found</h5>
+                    <div class="text-center"><a href="#" class="btn btn-success btn-lg"> Add Food</a></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+{% endblock %}

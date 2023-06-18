@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include "includes/cover.html" %}
+<!-- This is vendor_profile.html -->
+<section class = 'dashboard_section'>
+<div class="container">
+    
+    <div class="row">
+        {% include "includes/vendor_sidebar.html" %}
+
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+            
+            <div class="user-dashboard loader-holder">
+                <div class="user-holder">
+                    {% include 'includes/alerts.html' %}
+                    <h4>Build Your Food Menu</h4>
+                    <hr>
+                    <h6>Add New Category</h6>
+                    <div class="text-end">
+                        <a href="#" class="btn btn-success  m-1"><i class="fa-solid fa-plus"></i> Add Food</a>
+                        <a href="#" class="btn btn-info m-1"><i class="fa-solid fa-plus"></i> Add Categories</a>
+                    </div>
+                    <form action="{% url 'add_category' %}" method="post">
+                        {% csrf_token %}
+                        <label class="form-label">Category Name</label>
+                        {{form.category_name}}
+                        <label class="form-label">Category Description</label>
+                        {{form.description}}
+                        {% for field in form %}
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                    <li style="color: red;">{{error}}</li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+
+
+                        <div class="text-end"><button class="btn btn-success mt-2 btn-lg"  type="submit">Submit</button></div>
+
+                    </form>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+{% endblock %}

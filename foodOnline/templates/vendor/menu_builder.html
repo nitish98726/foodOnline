@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include "includes/cover.html" %}
+<!-- This is menU_builder.html -->
+<section class = 'dashboard_section'>
+<div class="container">
+    
+    <div class="row">
+        {% include "includes/vendor_sidebar.html" %}
+
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+            
+            <div class="user-dashboard loader-holder">
+                <div class="user-holder">
+                    {% include 'includes/alerts.html' %}
+                    <h4>Build Your Food Menu</h4>
+                    <hr>
+                    <h6>Menu Items</h6>
+                    <div class="text-end">
+                        <button class="btn btn-secondary" onclick="history.back()">Back</button>
+                        <a href="{% url 'add_foodItem' %}" class="btn btn-success  m-1"><i class="fa-solid fa-plus"></i> Add Food</a>
+                        <a href="{% url 'add_category' %}" class="btn btn-info m-1"><i class="fa-solid fa-plus"></i> Add Categories</a>
+                    </div>
+                    <table class="table table-hover mt-2">
+                        
+                        <tbody >
+                          {% for cat in categories %}
+                          <tr>
+                            <td  class="border border-0" >{{forloop.counter}}</td>
+                            <td class="border border-0 text-start"><a class="text-decoration-none  text-black" href="{% url 'food_item_byCategory'  cat.id %}"><p class="mb-0">{{cat.category_name}}</p><small class="text-muted ">{{cat.description}}</small></a></td>
+                            <td class="border border-0"><a href="{% url 'edit_category' cat.id %}" class=" btn btn-success text-decoration-none">Edit</a>|<a href="{% url 'delete_category' cat.id %}" onclick="return confirm('Are You sure ?')" class="btn btn-danger text-decoration-none">Delete</a></td>
+                            
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+{% endblock %}
