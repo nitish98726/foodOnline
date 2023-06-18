@@ -24,20 +24,20 @@
                         <a href="{% url 'add_category' %}" class="btn btn-info m-1"><i class="fa-solid fa-plus"></i> Add Categories</a>
                     </div>
                    
-                    <table class="table table-hover mt-2">
+                    <table class="table table-hover my-2">
                         
                         <tbody >
                           {% for food in fooditems %}
-                          <tr>
+                          <tr class="py-2">
                             <td  class="border border-0" >{{forloop.counter}}</td>
-                            <td class="border border-0 text-start p-0 "><img src="{{food.image.url}}" alt="Food Image" width="80px"></td>
+                            <td class="border border-0 text-start  "><img src="{{food.image.url}}" alt="Food Image" width="80px"></td>
                             <td class="border border-0 text-start">
                                 <a class="text-decoration-none  text-black" href="#">
                                     <p class="mb-0">{{food}}</p>
                                     <small class="text-muted text-wrap d-block lh-1">{{food.description}}</small>
                                 </a>
                             </td>
-                            <td class="border border-0"><a href="" class=" btn btn-success text-decoration-none">Edit</a>|<a href="" class="btn btn-danger text-decoration-none">Delete</a></td>
+                            <td class="border border-0"><a href="{% url 'edit_foodItem' food.id %}" class=" btn btn-success text-decoration-none">Edit</a>|<a href="{% url 'delete_foodItem' food.id %}" onclick="return confirm('Are you sure?')" class="btn btn-danger text-decoration-none">Delete</a></td>
                             
                           </tr>
                           {% endfor %}

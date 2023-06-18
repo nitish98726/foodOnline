@@ -1,6 +1,9 @@
+
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 {% include "includes/cover.html" %}
+
 <!-- This is vendor_profile.html -->
 <section class = 'dashboard_section'>
 <div class="container">
@@ -27,7 +30,11 @@
                                                         <li class="gal-img">
                                                             <div class="drag-list">
                                                                 <div class="item-thumb">
-                                                                    <img class="thumbnail" src="{{profile.profile_picture.url}}" alt="">
+                                                                    {% if profile.profile_picture %}
+                                                                        <img class="thumbnail" src="{{profile.profile_picture.url}}" alt="">
+                                                                    {% else %}
+                                                                        <img src="{% static 'images/default-profile.PNG' %}" alt="">
+                                                                    {% endif %}
                                                                 </div>
                                                             </div>
                                                         </li>
@@ -50,7 +57,11 @@
                                                         <li class="gal-img">
                                                             <div class="drag-list">
                                                                 <div class="item-thumb">
-                                                                    <img class="thumbnail" src="{{profile.cover_picture.url}}" alt="">
+                                                                    {% if profile.cover_picture %}
+                                                                        <img class="thumbnail" src="{{cover.profile_picture.url}}" alt="">
+                                                                    {% else %}
+                                                                        <img src="{% static 'images/default-cover.PNG' %}" alt="">
+                                                                    {% endif %}
                                                                 </div>
                                                             </div>
                                                         </li>

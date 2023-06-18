@@ -16,24 +16,29 @@
                     <h4>Build Your Food Menu</h4>
                     <hr>
                     <h6>Menu Items</h6>
-                    <div class="text-end">
-                        <button class="btn btn-secondary" onclick="history.back()">Back</button>
-                        <a href="{% url 'add_foodItem' %}" class="btn btn-success  m-1"><i class="fa-solid fa-plus"></i> Add Food</a>
-                        <a href="{% url 'add_category' %}" class="btn btn-info m-1"><i class="fa-solid fa-plus"></i> Add Categories</a>
-                    </div>
-                    <table class="table table-hover mt-2">
-                        
-                        <tbody >
-                          {% for cat in categories %}
-                          <tr>
-                            <td  class="border border-0" >{{forloop.counter}}</td>
-                            <td class="border border-0 text-start"><a class="text-decoration-none  text-black" href="{% url 'food_item_byCategory'  cat.id %}"><p class="mb-0">{{cat.category_name}}</p><small class="text-muted ">{{cat.description}}</small></a></td>
-                            <td class="border border-0"><a href="{% url 'edit_category' cat.id %}" class=" btn btn-success text-decoration-none">Edit</a>|<a href="{% url 'delete_category' cat.id %}" onclick="return confirm('Are You sure ?')" class="btn btn-danger text-decoration-none">Delete</a></td>
+                    {% if categories %}
+                        <div class="text-end">
+                            <button class="btn btn-secondary" onclick="history.back()">Back</button>
+                            <a href="{% url 'add_foodItem' %}" class="btn btn-success  m-1"><i class="fa-solid fa-plus"></i> Add Food</a>
+                            <a href="{% url 'add_category' %}" class="btn btn-info m-1"><i class="fa-solid fa-plus"></i> Add Categories</a>
+                        </div>
+                        <table class="table table-hover mt-2">
                             
-                          </tr>
-                          {% endfor %}
-                        </tbody>
-                    </table>
+                            <tbody >
+                            {% for cat in categories %}
+                            <tr>
+                                <td  class="border border-0" >{{forloop.counter}}</td>
+                                <td class="border border-0 text-start"><a class="text-decoration-none  text-black" href="{% url 'food_item_byCategory'  cat.id %}"><p class="mb-0">{{cat.category_name}}</p><small class="text-muted ">{{cat.description}}</small></a></td>
+                                <td class="border border-0"><a href="{% url 'edit_category' cat.id %}" class=" btn btn-success text-decoration-none">Edit</a>|<a href="{% url 'delete_category' cat.id %}" onclick="return confirm('Are You sure ?')" class="btn btn-danger text-decoration-none">Delete</a></td>
+                                
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <h5 class="text-center">No Categories Found</h5>
+                        <div class="text-center"><a href="{% url 'add_category' %}" class="btn btn-success">Add Category</a></div>
+                        {% endif %}
                     
                 </div>
             </div>
