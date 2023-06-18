@@ -138,7 +138,7 @@ def add_foodItem(request):
             food_item.vendor = get_vendor(request)
             food_item.is_available  = True
             food_item.slug = slugify(food_title)
-            food_item.image = food_image
+            
             food_item.save()
             messages.success(request , "New Food Item Created Succesfully")
             return redirect('menu_builder')
