@@ -8,6 +8,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required , user_passes_test
 from .utils import detectUser , send_verification_mail , user_activation , send_password_reset_mail
 from django.core.exceptions import PermissionDenied
+from django.utils.text import slugify
 from vendor.models import Vendor
 # Create your views here.
 
@@ -100,10 +101,12 @@ def registerVendor(request):
             user = User.objects.create_user(first_name = first_name ,last_name=last_name , email = email , username =username , password=password)
             user.role = User.RESTAURANT
             user.save()
+            vendor_name = vendor_form.cleaned_data['vendor_name']
             vendor = vendor_form.save(commit = False)
             vendor.user = user
             user_profile =  UserProfile.objects.get(user=user)
             vendor.user_profile =  user_profile
+            vendor.vendor_slug = slugify(vendor_name)+ '-'+ str(user.id)
             
             vendor.save()
             send_verification_mail(request , user)

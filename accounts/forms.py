@@ -36,5 +36,5 @@ class UserProfileForm(forms.ModelForm):
         fields = ['profile_picture' , 'cover_picture' , 'address',  'state' , 'city' ,'latitude' , 'longitude' , ]
     def __init__(self , *args , **kwargs):
         super(UserProfileForm ,self).__init__(*args , **kwargs)
-        self.fields['latitude'].disabled = True
-        self.fields['longitude'].disabled = True
+        self.fields['latitude'].widget.attrs['readonly']= True
+        self.fields['longitude'].widget.attrs['readonly']= True
