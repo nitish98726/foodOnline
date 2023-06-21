@@ -5,6 +5,7 @@ from menu.models import FoodItem
 from .models import Cart
 from .context_processors import get_cart_counter , get_cart_amounts
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 # Create your views here.
 def marketplace(request):
     vendors = Vendor.objects.filter(is_approved = True , user__is_active=True)
@@ -99,3 +100,23 @@ def delete_cartitem(request , cart_id):
                return JsonResponse({'status':'Failed' ,'message':'Cart Item Does not exists'})
         else:
             return JsonResponse({'status':'Failed' , 'message':"Invalid Request"  })
+
+# Search functionality on home page
+def search(request):
+    if request.method=='GET':
+        keyword= request.GET['keyword']
+        address = request.GET['address']
+        lat = request.GET['lat']
+        long = request.GET['long']
+        radius = request.GET['radius']
+        # get vendor id that has the user desired fooditem
+        vendor_byFoodItem = FoodItem.objects.filter(Q(food_title__icontains=keyword , is_available=True)|Q(description__icontains=keyword , is_available=True)).values_list('vendor_id' , flat=True)
+        vendors = Vendor.objects.filter(Q(id__in=list(set(vendor_byFoodItem))) |Q(vendor_name__icontains =keyword , is_approved=True , user__is_active=True))       
+        
+        vendor_count =vendors.count()
+        
+        context = {
+            'vendors':vendors,
+            'vendor_count':vendor_count,
+        }
+    return render(request , 'marketplace/listings.html' ,context)

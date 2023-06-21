@@ -84,8 +84,10 @@ def add_category(request):
             category_name = form.cleaned_data['category_name']
             category_description = form.cleaned_data['description']
             vendor = get_vendor(request)
-            slug = slugify(category_name)
-            category = Category.objects.create(category_name=category_name , vendor= vendor , slug = slug , description = category_description)
+            
+            category = Category.objects.create(category_name=category_name , vendor= vendor  , description = category_description)
+            category.save()
+            category.slug = slugify(category_name)+'-'+str(category.id)
             category.save()
             messages.success(request , "Category Added Succesfully")
             return redirect('menu_builder')
@@ -141,13 +143,17 @@ def add_foodItem(request):
         
         if form.is_valid():
             food_title = form.cleaned_data['food_title']
-            
+            food_category = form.cleaned_data['category']
             food_item = form.save(commit=False)
             food_item.vendor = get_vendor(request)
             food_item.is_available  = True
-            food_item.slug = slugify(food_title)
             
+            food_item.slug = slugify(food_title)+'-'+str(food_item.id)
             food_item.save()
+            fooditem = FoodItem.objects.get(food_title = food_title , vendor=get_vendor(request) , category = food_category)
+            fooditem.slug = slugify(food_title)+'-'+str(food_item.id)
+            fooditem.save()
+            
             messages.success(request , "New Food Item Created Succesfully")
             return redirect('food_item_byCategory' , food_item.category.id)
         else:
@@ -170,13 +176,16 @@ def edit_foodItem(request , pk=None):
         
         if form.is_valid():
             food_title = form.cleaned_data['food_title']
-            
+            food_category = form.cleaned_data['category']
             food_item = form.save(commit=False)
             food_item.vendor = get_vendor(request)
             food_item.is_available  = True
             food_item.slug = slugify(food_title)
             
             food_item.save()
+            fooditem = FoodItem.objects.get(food_title = food_title , vendor=get_vendor(request) , category = food_category)
+            fooditem.slug = slugify(food_title)+'-'+str(food_item.id)
+            fooditem.save()
             messages.success(request , "Food Item Updated Succesfully")
             return redirect('food_item_byCategory' , food_item.category.id)
         else:
