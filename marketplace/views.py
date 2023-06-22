@@ -6,6 +6,10 @@ from .models import Cart
 from .context_processors import get_cart_counter , get_cart_amounts
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+# Geodjango modules
+from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.measure import D
+from django.contrib.gis.db.models.functions import Distance
 # Create your views here.
 def marketplace(request):
     vendors = Vendor.objects.filter(is_approved = True , user__is_active=True)
@@ -112,11 +116,19 @@ def search(request):
         # get vendor id that has the user desired fooditem
         vendor_byFoodItem = FoodItem.objects.filter(Q(food_title__icontains=keyword , is_available=True)|Q(description__icontains=keyword , is_available=True)).values_list('vendor_id' , flat=True)
         vendors = Vendor.objects.filter(Q(id__in=list(set(vendor_byFoodItem))) |Q(vendor_name__icontains =keyword , is_approved=True , user__is_active=True))       
-        
-        vendor_count =vendors.count()
+        if lat and long and radius:
+            pnt = GEOSGeometry('POINT(%s %s)' % (long , lat))
+            vendors = Vendor.objects.filter(Q(id__in=list(set(vendor_byFoodItem))) |Q(vendor_name__icontains =keyword , is_approved=True , user__is_active=True) , 
+                                            user_profile__location__distance_lte=(pnt , D(km=radius))
+                                            ).annotate(distance=Distance("user_profile__location" , pnt)).order_by('distance')
+            for v in vendors:
+                v.kms = round(v.distance.km ,1 )
+        vendor_count = vendors.count()
         
         context = {
             'vendors':vendors,
             'vendor_count':vendor_count,
+            'source_location':address,
         }
+    
     return render(request , 'marketplace/listings.html' ,context)

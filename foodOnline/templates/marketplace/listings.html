@@ -32,7 +32,7 @@
                                                     <img src="{% static 'images/default-profile.PNG' %}" alt="default-profile">
                                                     {% endif %}
                                             </figure>
-                                            <span class="restaurant-status close"><em class="bookmarkRibbon"></em>Close</span>
+                                            <span class="restaurant-status close"><em class="bookmarkRibbon"></em>Open</span>
                                         </div>
                                         <div class="text-holder">
                                             
@@ -44,6 +44,10 @@
                                             </div> 
                                             {% if vendor.user_profile.address %} 
                                                 <span><small>{{vendor.user_profile.address}}</small></span>
+                                            {% endif %}
+                                            <br>
+                                            {% if source_location %}
+                                            <span><small>{{vendor.kms}} Km away from {{source_location}}</small></span>
                                             {% endif %}
                                             
                                             
