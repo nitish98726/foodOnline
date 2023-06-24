@@ -264,3 +264,85 @@ $(document).ready(function(){
 
     }
 })
+
+$(document).ready(function(){
+    $('.add_hour').on('click' , function(e){
+        e.preventDefault()
+        var day = document.getElementById('id_day').value
+        var from_hour = document.getElementById('id_from_hour').value
+        var to_hour = document.getElementById('id_to_hour').value
+        var is_closed = document.getElementById('id_is_closed').checked
+        var csrf_token = $('input[name=csrfmiddlewaretoken]').val()
+        var url = document.getElementById('add_hour_url').value
+        if(is_closed){
+            is_closed = "True"
+            condition = "day != ''"
+            
+        }
+        else{
+            is_closed = "False"
+            condition = "day != '' && from_hour !='' && to_hour!=''"
+        }
+        if(eval(condition)){
+            $.ajax({
+                type:'POST',
+                url:url,
+                data:{
+                  'day':day,
+                  'from_hour' :from_hour,
+                  'to_hour':to_hour,
+                  'is_closed':is_closed,
+                  'csrfmiddlewaretoken':csrf_token,
+                },
+                success: function(response){
+                    if(response.status=='success'){
+                        // Below to strings are added to class and data-url so that remove ajax works
+                        var str1 ='hour-'+response.id;
+                        var str2 = '/vendor/opening_hours/remove/'+response.id;
+                        if(response.is_closed =="Closed"){
+                            
+                            html = "<tr id="+str1+"><td class='border border-0'><b>"+response.day+"</b></td><td class='border border-0'>Closed</td><td class='border border-0'><a href='' class='btn btn-outline-danger remove_hour' data-url="+str2+">Remove</a></td></tr>"
+
+                        }else{
+                            html = "<tr id="+str1+"><td class='border border-0'><b>"+response.day+"</b></td><td class='border border-0'>"+response.from_hour+' - '+response.to_hour+"</td><td class='border border-0'><a href='' class='btn btn-outline-danger remove_hour' data-url="+str2+">Remove</a></td></tr>"
+
+                        }
+                        $('.opening_hours').append(html)
+                        document.getElementById('opening_hours').reset()
+                    }else{
+                        swal(response.message , '' , 'error')
+                    }
+                }
+
+            })
+    
+        }else{
+            swal('ALERT' ,"Please fill All The Fields" , 'info')
+        }
+       
+    })
+
+    // Remove Opening Hour - since the document does not reloads we have to write $(document) - to make it ajax
+    $(document).on('click' , '.remove_hour' , function(e){
+        e.preventDefault();
+        url = $(this).attr('data-url')
+
+        $.ajax({
+            type:'GET',
+            url:url,
+            success: function(response){
+                console.log(response)
+                if(response.status=='Success'){
+                    document.getElementById('hour-'+String(response.id)).remove()
+                    
+                }
+                else{
+                    swal("ALERT" , "Some Error has Occured"  , 'error')
+                }
+                
+            }
+
+        })
+    })
+   
+})

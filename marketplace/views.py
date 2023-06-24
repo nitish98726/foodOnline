@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from vendor.models import Vendor
+from vendor.models import Vendor , OpeningHour
 from django.http import HttpResponse , JsonResponse
 from menu.models import FoodItem
 from .models import Cart
@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
+from datetime import date , datetime
 # Create your views here.
 def marketplace(request):
     vendors = Vendor.objects.filter(is_approved = True , user__is_active=True)
@@ -27,9 +28,18 @@ def vendor_detail(request , vendor_slug):
         cartitems = Cart.objects.filter(user = request.user)
     else:
         cartitems = None
+    openinghour = OpeningHour.objects.filter(vendor=vendor).order_by('day' , '-from_hour')
+    today_date = date.today()
+    today = today_date.isoweekday()
+    today_opening_hours = OpeningHour.objects.filter(vendor=vendor , day = today)
+    is_open = vendor.is_open()
+        
     context = {
+        'openinghour':openinghour,
         'vendor':vendor,
         'cartitems':cartitems,
+        'today_opening_hours':today_opening_hours,
+        'is_open':is_open,
     }
     return render(request , 'marketplace/vendor_detail.html' , context)
 
