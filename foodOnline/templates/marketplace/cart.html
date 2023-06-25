@@ -91,12 +91,14 @@
                                                 <span id="subtotal">{{subtotal}}</span>
                                             </span>
                                         </li>
-                                        <li  class="list-unstyled">Tax
-                                            <span class="price float-end pe-3">
+                                        {% for item in tax_list %}
+                                            <li  class="list-unstyled">{{item.tax_type}}<small> {{item.tax_percentage}}%</small>
+                                                <span class="price float-end pe-3">
                                                 <span class="currency">$</span>
-                                                <span id="tax">{{tax}}</span>
-                                            </span>
-                                        </li>
+                                                <span id="tax-{{item.tax_type}}">{{item.tax_amount}}</span>
+                                                </span>
+                                            </li>
+                                        {% endfor %}
                                         <li  class="list-unstyled">Total
                                             <span class="price float-end fw-bold pe-3">
                                                 <span class="currency">$</span>

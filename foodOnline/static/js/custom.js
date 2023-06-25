@@ -101,7 +101,7 @@ $(document).ready(function(){
                     if(window.location.pathname == '/cart/'){
                         applyCartAmounts(
                             response.cart_amount['subtotal'],
-                            response.cart_amount['tax'],
+                            response.cart_amount['tax_list'],
                             response.cart_amount['grand_total']
                         )
                     }
@@ -111,10 +111,17 @@ $(document).ready(function(){
             }
 
         })
-        function applyCartAmounts(subtotal , tax , grand_total){
+        function applyCartAmounts(subtotal , tax_list , grand_total){
             $('#subtotal').html(subtotal)
-            $('#tax').html(tax)
+            
             $('#total').html(grand_total)
+            for(item in tax_list){
+                // console.log(tax_list[item]["tax_type"])
+                $('#tax-'+tax_list[item]["tax_type"]).html(tax_list[item]['tax_amount'])
+            }
+            
+            
+           
 
         }
     })
@@ -162,7 +169,7 @@ $(document).ready(function(){
                 if(window.location.pathname == '/cart/'){
                     applyCartAmounts(
                         response.cart_amount['subtotal'],
-                        response.cart_amount['tax'],
+                        response.cart_amount['tax_list'],
                         response.cart_amount['grand_total']
                     )
                 }
@@ -188,10 +195,14 @@ $(document).ready(function(){
                 }
             }
         }
-        function applyCartAmounts(subtotal , tax , grand_total){
+        function applyCartAmounts(subtotal , tax_list , grand_total){
             $('#subtotal').html(subtotal)
-            $('#tax').html(tax)
+           
             $('#total').html(grand_total)
+            for(item in tax_list){
+                // console.log(tax_list[item]["tax_type"])
+                $('#tax-'+tax_list[item]["tax_type"]).html(tax_list[item]['tax_amount'])
+            }
 
         }
     })
@@ -234,7 +245,7 @@ $(document).ready(function(){
                 if(window.location.pathname == '/cart/'){
                     applyCartAmounts(
                         response.cart_amount['subtotal'],
-                        response.cart_amount['tax'],
+                        response.cart_amount['tax_list'],
                         response.cart_amount['grand_total']
                     )
                 }
@@ -257,10 +268,14 @@ $(document).ready(function(){
             document.getElementById('empty-cart').classList.remove('d-none')
         }
     }
-    function applyCartAmounts(subtotal , tax , grand_total){
+    function applyCartAmounts(subtotal , tax_list , grand_total){
         $('#subtotal').html(subtotal)
-        $('#tax').html(tax)
+        
         $('#total').html(grand_total)
+        for(item in tax_list){
+            // console.log(tax_list[item]["tax_type"])
+            $('#tax-'+tax_list[item]["tax_type"]).html(tax_list[item]['tax_amount'])
+        }
 
     }
 })
