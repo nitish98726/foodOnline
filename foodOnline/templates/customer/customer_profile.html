@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-{% include 'includes/alerts.html' %}
+
 <!-- This is custDashboard.html -->
 <section class="dashboard_section">
     <div class="main-section">
@@ -13,7 +13,7 @@
                     <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                         <div class="user-dashboard loader-holder">
                             <div class="user-holder">
-                                
+                                {% include 'includes/alerts.html' %}
                                 <h5 class="text-uppercase text-decoration-underline">Profile Settings</h5>
                                 <form action="{% url 'customer_profile' %}" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}

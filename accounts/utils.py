@@ -57,6 +57,10 @@ def send_notification(main_subject ,mail_template,context):
     
     
     message = render_to_string(mail_template,context)
-    to_email = context['user'].email
-    send_email = EmailMessage(main_subject , message , to=[to_email])
+    if(isinstance(context['to_email'],str)):
+        to_email = []
+        to_email.append(context['to_email'])
+    else:
+        to_email = context['to_email']
+    send_email = EmailMessage(main_subject , message , to=to_email)
     send_email.send()

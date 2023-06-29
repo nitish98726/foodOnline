@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from vendor.models import Vendor , OpeningHour
 from django.http import HttpResponse , JsonResponse
 from menu.models import FoodItem
@@ -11,6 +11,11 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
 from datetime import date , datetime
+from orders.forms import OrderForm
+from django.shortcuts import get_object_or_404
+from accounts.models import UserProfile
+
+
 # Create your views here.
 def marketplace(request):
     vendors = Vendor.objects.filter(is_approved = True , user__is_active=True)
@@ -142,3 +147,30 @@ def search(request):
         }
     
     return render(request , 'marketplace/listings.html' ,context)
+@login_required(login_url = 'login')
+def checkout(request):
+    cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
+    cart_count = cart_items.count()
+    
+    if cart_count==0:
+        return redirect('marketplace')
+    user_profile = get_object_or_404(UserProfile , user=request.user)
+    defaut_values = {
+        'first_name':request.user.first_name,
+        'last_name':request.user.last_name,
+        'phone':request.user.phone_number,
+        'email':request.user.email,
+        'address':user_profile.address,
+        'country':user_profile.country,
+        'state':user_profile.state,
+        'city':user_profile.city,
+        
+    }
+    form = OrderForm(initial=defaut_values)
+    context = {
+        'form':form,
+        'cart_items':cart_items,
+       
+    
+    }
+    return render(request , 'marketplace/checkout.html' , context)

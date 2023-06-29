@@ -10,6 +10,7 @@ from .utils import detectUser , send_verification_mail , user_activation , send_
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
 from vendor.models import Vendor
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 def check_role_vendor(user):
@@ -136,7 +137,11 @@ def myAccount(request):
 @login_required(login_url='/accounts/login')
 @user_passes_test(check_role_customer)
 def custDashboard(request):
-    return render(request , 'accounts/custDashboard.html')
+    profile = get_object_or_404(UserProfile , user = request.user)
+    context = {
+        'profile':profile,
+    }
+    return render(request , 'accounts/custDashboard.html' , context)
 
 @login_required(login_url='/accounts/login')
 @user_passes_test(check_role_vendor)

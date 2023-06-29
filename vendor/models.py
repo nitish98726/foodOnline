@@ -25,7 +25,8 @@ class Vendor(models.Model):
             mail_template = 'accounts/emails/admin_vendorApproval_email.html'
             context = {
                 'user':self.user,
-                'is_approved':self.is_approved
+                'is_approved':self.is_approved,
+                'to_email': self.user.email,
             }
             if orig.is_approved != self.is_approved:
                 if self.is_approved == True:

@@ -2,7 +2,7 @@
 
 
 
-<div class="page-section restaurant-detail-image-section" style=" background: url({% static 'images/default-cover.PNG' %}) no-repeat scroll 0 0 / cover;">
+<div class="page-section restaurant-detail-image-section" style=" background: url({% if profile.cover_picture %}{{profile.cover_picture.url}}{% else %}{% static 'images/default-cover.PNG' %}{% endif %}) no-repeat scroll 0 0 / cover;">
     <!-- Container Start -->
     <div class="container">
         <!-- Row Start -->
@@ -12,9 +12,15 @@
                 <div class="company-info-detail">
                     <div class="company-info">
                         <div class="img-holder">
+                            {% if profile.profile_picture %}
+                            <figure>
+                                <img src="{{profile.profile_picture.url}}" alt="">
+                            </figure>
+                            {% else %}
                             <figure>
                                 <img src="{% static 'extra-images/listing-logo18.png' %}" alt="">
                             </figure>
+                            {% endif %}
                         </div>
 
                         <div class="text-holder">
