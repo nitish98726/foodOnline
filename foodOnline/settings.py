@@ -165,3 +165,6 @@ os.environ['PROJ_LIB'] = os.path.join(BASE_DIR, '..\env\Lib\site-packages\osgeo\
 GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, '..\env\Lib\site-packages\osgeo\gdal304.dll')
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY='same-origin-allow-popups'
+
+RZP_KEY_ID = config("RZP_KEY_ID")
+RZP_KEY_SECRET = config("RZP_KEY_SECRET")

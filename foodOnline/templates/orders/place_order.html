@@ -89,7 +89,14 @@
                                                 <span id="total">{{grand_total}}</span>
                                             </span>
                                         </li>
+                                        {% if order.payment_method == "PayPal" %}
                                         <div id="paypal-button-container" style="margin-right: 20px; margin-top: 20px;"></div>
+                                        {% elif order.payment_method == 'RazorPay' %}
+                                        <div class="rzp_payment_button w-100" style="margin-right: 20px; margin-top: 20px;">
+                                            <button class="btn btn-danger w-100" id="rzp-button1">Pay With Razorpay</button>
+                                            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                                        </div>
+                                        {% endif %}
                                         <div class="d-none fw-bold text-center" id="spinner_wait"><i class="fa-solid fa-spinner fa-spin"></i> Please Wait..</div>
                                     </ul>
                                 </div>
@@ -170,6 +177,73 @@
             }
 
         })
+    }
+    function sendTransactionRzp(transaction_id , payment_method , status , razorpay_order_id , razorpay_signature){
+        $.ajax({
+            type:"POST",
+            url:url,
+            data:{
+                'order_number':order_number,
+                'transaction_id':transaction_id,
+                'payment_method':payment_method,
+                'status':status,
+                'csrfmiddlewaretoken':csrftoken,
+                'razorpay_order_id':razorpay_order_id,
+                'razorpay_signature':razorpay_signature,
+            },
+            success: function(response){
+                console.log(response)
+                if(response.status=='Success'){
+                    window.location.href = order_complete+'?order_number='+response.order_number+'&transaction_id='+response.transaction_id  
+                }else if(response.status=="Failed"){
+                    swal(response.status , response.message , 'error')
+                }
+               
+            }
+
+        })
+    }
+    // Razorpay payment gateway
+    var options = {
+    "key": "{{RZP_KEY_ID}}", // Enter the Key ID generated from the Dashboard
+    "amount": "{{rzp_amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "FoodOnline", //your business name
+    "description": "MultiVendor Restaurant MarketPlace",
+    "image": "{% static 'logo/foodOnlineLogo.png' %}",
+    "order_id": "{{rzp_order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function(response){
+        console.log(response)
+        var transaction_id = response.razorpay_payment_id
+        var payment_method = "RAZORPAY"
+        var status = 'Success'
+        var razorpay_order_id = response.razorpay_order_id
+        var signature = response.razorpay_signature
+        sendTransactionRzp(transaction_id , payment_method , status , razorpay_order_id , signature)
+        $('#spinner_wait').removeClass('d-none') 
+
+    },
+    // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+    "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+        "name": "{{order.name}}", //your customer's name
+        "email": "{{order.email}}",
+        "contact": "{{order.phone}}" //Provide the customer's phone number for better conversion rates 
+    },
+    "notes": {
+        "address": "{{order.address}}"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+    
+    };
+    
+
+   
+    var rzp1 = new Razorpay(options);
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
     }
 </script>
 {% endblock %}
