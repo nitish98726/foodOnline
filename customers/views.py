@@ -5,6 +5,7 @@ from accounts.forms import UserProfileForm , UserInfoForm
 from accounts.models import UserProfile , User
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from orders.models import Order , OrderFood
 
 @login_required(login_url = 'login')
 
@@ -32,3 +33,26 @@ def customer_profile(request):
         'profile':profile,
     }
     return render(request , 'customer/customer_profile.html' ,context)
+
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user , is_ordered=True)
+    context = {
+        'orders':orders,
+    }
+    return render(request , 'customer/my_orders.html' , context)
+def order_details(request , order_number):
+    
+    try:
+        order = get_object_or_404(Order , order_number=order_number)
+        orderfood = OrderFood.objects.filter(order=order)
+        subtotal = 0
+        for item in orderfood:
+            subtotal += (item.price*item.quantity)
+    except:
+        return redirect('custDashboard')
+    context = {
+        'order':order,
+        'orderfood':orderfood,
+        'subtotal':subtotal,
+    }
+    return render(request , 'customer/order_details.html' , context)

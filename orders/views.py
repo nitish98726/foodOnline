@@ -11,6 +11,8 @@ from django.http import HttpResponse , JsonResponse
 from accounts.utils import send_notification
 import razorpay
 from foodOnline.settings import RZP_KEY_ID , RZP_KEY_SECRET
+from menu.models import FoodItem
+from marketplace.models import Tax
 
 # Create your views here.
 
@@ -22,8 +24,49 @@ def place_order(request):
     cartcount = cartitems.count()
     if cartcount<=0:
         return redirect('marketplace')
+    vendor_ids = []
+    for i in cartitems:
+        if i.fooditem.vendor.id not in vendor_ids:
+            vendor_ids.append(i.fooditem.vendor.id)
+    # print(vendor_ids)
+    # code piece for managing total per vendor
+    get_tax = Tax.objects.filter(is_active=True)
+    print(get_tax)
+    subtotal =0
+    k = {}
+    for i in cartitems:
+        fooditem = FoodItem.objects.get(pk=i.fooditem.id , vendor_id__in=vendor_ids)
+        v_id = fooditem.vendor.id
+        if v_id in k:
+            subtotal = k[v_id]
+            subtotal += (fooditem.price*i.quantity)
+            k[v_id] = subtotal
+        else:
+            subtotal = (fooditem.price*i.quantity)
+            k[v_id] = subtotal
+    # print(k)
+    tax_list = []
+    for key in k.keys():
+        
+        for i in get_tax:
+            # print(i)
+            tax_type = i.tax_type
+            tax_percentage = i.tax_percentage
+            tax_amount = round((tax_percentage*k[key])/100 ,2)
+            tax_dict = {
+                key : {
+                    k[key]:{
+                    'tax_type': tax_type,
+                    'tax_percentage': float(tax_percentage),
+                    'tax_amount': float(tax_amount)
+                    }
+                }
+            }
+            tax_list.append(tax_dict)
+         
     
-    subtotal = get_cart_amounts(request)['subtotal']
+
+    # subtotal = get_cart_amounts(request)['subtotal']
     total_tax = get_cart_amounts(request)['tax']
     grand_total = get_cart_amounts(request)['grand_total']
     tax_data = get_cart_amounts(request)['tax_list']
@@ -45,9 +88,10 @@ def place_order(request):
             order.total  = grand_total
             order.total_tax =total_tax
             order.payment_method = request.POST['payment_method']
-            
+            order.total_data =  tax_list
             order.save()
             order.order_number = generate_order_number(order.id)
+            order.vendors.add(*vendor_ids)
             order.save()
             data = {
                 "amount":float(order.total)*100,

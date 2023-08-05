@@ -6,7 +6,7 @@ class OrderFoodInline(admin.TabularInline):
     extra =0
     readonly_fields = ['order' , 'payment' , 'user' , 'fooditem' , 'quantity' , 'price' , 'amount']
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['user' , 'payment' , 'order_number' , 'email' , 'total' , 'total_tax' , 'status' , 'is_ordered']
+    list_display = ['user' , 'payment' , 'order_number' , 'email' , 'total' , 'total_tax' , 'status' ,'order_placed_to', 'is_ordered' , ]
     search_fields = ['user' , 'is_ordered']
     inlines = [OrderFoodInline]
 class PaymentAdmin(admin.ModelAdmin):

@@ -46,6 +46,7 @@
 </div>
 <script src="{% static 'js/scripts.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
         $(document).ready(function(){
@@ -56,6 +57,11 @@
                 $('#messages_django').hide(2000);
             })
         })
+    </script>
+    <script>
+        $(document).ready( function () {
+            $('#my_ordersTable').DataTable();
+        } );
     </script>
 </body>
 </html>
